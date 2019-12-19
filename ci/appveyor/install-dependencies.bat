@@ -22,14 +22,14 @@ echo Get velocypack from git...
 git clone https://github.com/arangodb/velocypack.git
 cd velo*
 
-echo Setting linker settings from /MT to /MD
-echo "Fart location: %FART%"
-echo "Curent directory: %CD%"
-%FART% "%CD%\cmake\Modules\AR_CompilerSettings.cmake" MTd MDd
-%FART% "%CD%\cmake\Modules\AR_CompilerSettings.cmake" MT MD
+REM echo Setting linker settings from /MT to /MD
+REM echo "Fart location: %FART%"
+REM echo "Curent directory: %CD%"
+REM %FART% "%CD%\cmake\Modules\AR_CompilerSettings.cmake" MTd MDd
+REM %FART% "%CD%\cmake\Modules\AR_CompilerSettings.cmake" MT MD
 
 echo "Configuring..."
-cmake -G"Visual Studio 15 2017" -DCMAKE_BUILD_TYPE=Release -DBuildTools=OFF -DBuildVelocyPackExamples=OFF -DBuildTests=OFF -DCMAKE_INSTALL_PREFIX:PATH="%CONDA_PREFIX%\Library" .. -A x64 -S . -B build
+cmake -G"Visual Studio 15 2017" -DCMAKE_BUILD_TYPE=RELEASE -DHashType=xxhash -DBuildTools=OFF -DBuildVelocyPackExamples=OFF -DBuildTests=OFF -DCMAKE_INSTALL_PREFIX:PATH="%CONDA_PREFIX%\Library" .. -A x64 -S . -B build
 echo "Building..."
 cmake --build build --config %CONFIGURATION% --target install
 
