@@ -29,7 +29,7 @@ REM %FART% "%CD%\cmake\Modules\AR_CompilerSettings.cmake" MTd MDd
 REM %FART% "%CD%\cmake\Modules\AR_CompilerSettings.cmake" MT MD
 
 echo "Configuring..."
-cmake -G"Visual Studio 15 2017" -DCMAKE_BUILD_TYPE=RELEASE -DHashType=xxhash -DBuildTools=OFF -DBuildVelocyPackExamples=OFF -DBuildTests=OFF -DCMAKE_INSTALL_PREFIX:PATH="%CONDA_PREFIX%\Library" .. -A x64 -S . -B build
+cmake -G"Visual Studio 15 2017" -DCMAKE_CXX_FLAGS_RELEASE="${${flag_var}} /MD" -DCMAKE_BUILD_TYPE=RELEASE -DHashType=xxhash -DBuildTools=OFF -DBuildVelocyPackExamples=OFF -DBuildTests=OFF -DCMAKE_INSTALL_PREFIX:PATH="%CONDA_PREFIX%\Library" .. -A x64 -S . -B build
 echo "Building..."
 cmake --build build --config %CONFIGURATION% --target install
 
