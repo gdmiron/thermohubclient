@@ -30,17 +30,17 @@ target_include_directories(ThermoHubClient
 target_link_libraries(ThermoHubClient
     PRIVATE ${THIRDPARTY_LIBS}
     PUBLIC velocypack
-    PUBLIC jsonarango-static
+    PRIVATE jsonarango-static
     )
 
 if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
 # Link ThermoHubClient library against external (linked in static jsonarango) dependencies
 target_link_libraries(ThermoHubClient
-    PUBLIC libcurl
+    PRIVATE libcurl
     )
 else()
 target_link_libraries(ThermoHubClient
-    PUBLIC curl
+    PRIVATE curl
     )
 endif()
 
