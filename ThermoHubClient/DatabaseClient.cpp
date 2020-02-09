@@ -352,7 +352,8 @@ struct DatabaseClient::Impl
         if (idThermoDataSet == "")
             throw std::runtime_error("Thermodataset with symbol " + thermodataset + " was not found.");
         queryThermoDataSet(idThermoDataSet, substances, classesOfSubstance, aggregateStates);
-        selectDataContainingElements(elements);
+        if (elements.size()>0)
+	    selectDataContainingElements(elements);
         return resultThermoDataSet;
     }
 
