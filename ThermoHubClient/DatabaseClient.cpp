@@ -34,9 +34,9 @@ namespace ThermoHubClient
 {
 // Get Arangodb connection data( load settings from "examples-cfg.json" config file )
 const arangocpp::ArangoDBConnection default_data(arangocpp::ArangoDBConnection::remote_server_endpoint, // server address
-                                                 "funrem",                                              
-                                                 "ThermoFun@Remote-ThermoHub-Server",                   
-                                                 "hub_main");                                           
+                                                 "funrem",
+                                                 "ThermoFun@Remote-ThermoHub-Server",
+                                                 "hub_main");
 void printData(const std::string &title, const std::vector<std::string> &values)
 {
     std::cout << title << std::endl;
@@ -229,7 +229,7 @@ struct DatabaseClient::Impl
             arangocpp::ArangoDBQuery aqlquery(query_, arangocpp::ArangoDBQuery::AQL);
 
             std::string options = "{ \"maxPlans\" : 1, "
-                              "  \"optimizer\" : { \"rules\" : [ \"-all\", \"+remove-unnecessary-filters\" ]  } } ";
+                                  "  \"optimizer\" : { \"rules\" : [ \"-all\", \"+remove-unnecessary-filters\" ]  } } ";
 
             aqlquery.setBindVars(bind_value);
             aqlquery.setOptions(options);
@@ -241,6 +241,16 @@ struct DatabaseClient::Impl
             e = std::regex("null,");
             resultThermoDataSet = std::regex_replace(result, e, "");
 
+            // validate json
+            try
+            {
+                json jThermoDataSet = json::parse(resultThermoDataSet);
+            }
+            catch(json::exception &ex)
+            {
+                std::cout << "Could not clean null from retrieved data. Continuing ..." << std::endl;
+                resultThermoDataSet = recjsonValues[0];
+            }
             //printData( "Select records by AQL query", recjsonValues );
         }
         catch (arangocpp::arango_exception &e)
@@ -352,8 +362,14 @@ struct DatabaseClient::Impl
         if (idThermoDataSet == "")
             throw std::runtime_error("Thermodataset with symbol " + thermodataset + " was not found.");
         queryThermoDataSet(idThermoDataSet, substances, classesOfSubstance, aggregateStates);
-        if (elements.size()>0)
-	    selectDataContainingElements(elements);
+        if (elements.size() > 0)
+            selectDataContainingElements(elements);
+        else
+        {
+            json jThermoDataSet = json::parse(resultThermoDataSet);
+            resultThermoDataSet = jThermoDataSet.dump(json_indent);
+        }
+
         return resultThermoDataSet;
     }
 
